@@ -22,15 +22,6 @@ namespace
         float u, v;  //Uv
     };
 
-    struct DrawElementsCommand
-    {
-        GLuint vertexCount;
-        GLuint instanceCount;
-        GLuint firstIndex;
-        GLuint baseVertex;
-        GLuint baseInstance;
-    };
-
     struct Matrix
     {
         float a0, a1, a2, a3;
@@ -342,7 +333,7 @@ void generateDrawCommands()
     //feed the instance id to the shader.
     glBindBuffer(GL_ARRAY_BUFFER, gIndirectBuffer);
     glEnableVertexAttribArray(2);
-    glVertexAttribIPointer(2, 1, GL_UNSIGNED_INT, sizeof(SDrawElementsCommand), (void*)(offsetof(DrawElementsCommand, baseInstance)));
+    glVertexAttribIPointer(2, 1, GL_UNSIGNED_INT, sizeof(SDrawElementsCommand), (void*)(offsetof(SDrawElementsCommand, baseInstance)));
     glVertexAttribDivisor(2, 1); //only once per instance
 }
 
