@@ -157,6 +157,17 @@ void GenerateGeometry()
     Matrix vMatrix[100];
     unsigned vertexIndex(0);
     unsigned matrixIndex(0);
+
+    for (unsigned int k(0); k != gQuad.size(); ++k)
+    {
+        vVertex[vertexIndex++] = gQuad[k];
+    }
+
+    for (unsigned int k(0); k != gTriangle.size(); ++k)
+    {
+        vVertex[vertexIndex++] = gTriangle[k];
+    }
+
     //Clipspace, lower left corner = (-1, -1)
     float xOffset(-0.95f);
     float yOffset(-0.95f);
@@ -165,22 +176,6 @@ void GenerateGeometry()
     {
         for (unsigned int j(0); j != 10; ++j)
         {
-            //quad
-            if (j % 2 == 0)
-            {
-                for (unsigned int k(0); k != gQuad.size(); ++k)
-                {
-                    vVertex[vertexIndex++] = gQuad[k];
-                }
-            }
-            //triangle
-            else
-            {
-                for (unsigned int k(0); k != gTriangle.size(); ++k)
-                {
-                    vVertex[vertexIndex++] = gTriangle[k];
-                }
-            }
             //set position in model matrix
             setMatrix(&vMatrix[matrixIndex++], xOffset, yOffset);
             xOffset += 0.2f;
@@ -317,7 +312,7 @@ void generateDrawCommands()
 {
     //Generate draw commands
     SDrawElementsCommand vDrawCommand[100];
-    GLuint baseVert = 0;
+
     for (unsigned int i(0); i<100; ++i)
     {
         //quad
@@ -326,9 +321,8 @@ void generateDrawCommands()
             vDrawCommand[i].vertexCount = 12;		//4 triangles = 12 vertices
             vDrawCommand[i].instanceCount = 1;		//Draw 1 instance
             vDrawCommand[i].firstIndex = 0;			//Draw from index 0 for this instance
-            vDrawCommand[i].baseVertex = baseVert;	//Starting from baseVert
+            vDrawCommand[i].baseVertex = 0;	        //Starting from baseVert
             vDrawCommand[i].baseInstance = i;		//gl_InstanceID
-            baseVert += gQuad.size();
         }
         //triangle
         else
@@ -336,9 +330,8 @@ void generateDrawCommands()
             vDrawCommand[i].vertexCount = 3;		//1 triangle = 3 vertices
             vDrawCommand[i].instanceCount = 1;		//Draw 1 instance
             vDrawCommand[i].firstIndex = 0;			//Draw from index 0 for this instance
-            vDrawCommand[i].baseVertex = baseVert;	//Starting from baseVert
+            vDrawCommand[i].baseVertex = gQuad.size();//Starting from baseVert
             vDrawCommand[i].baseInstance = i;		//gl_InstanceID
-            baseVert += gTriangle.size();
         }
     }
 
