@@ -88,9 +88,9 @@ namespace
     };
 
     const std::vector<unsigned int> gQuadIndex = {
-        0,1,2,
         1,4,2,
         2,4,3,
+        0,1,2,
         0,2,3
     };
 
@@ -204,8 +204,8 @@ void GenerateGeometry()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gElementBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, triangle_bytes + quad_bytes, NULL, GL_STATIC_DRAW);
 
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, quad_bytes, gQuadIndex.data());
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, quad_bytes, triangle_bytes, gTriangleIndex.data());
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, triangle_bytes, gTriangleIndex.data());
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, triangle_bytes, quad_bytes, gQuadIndex.data());
 
     //Setup per instance matrices
     //Method 1. Use Vertex attributes and the vertex attrib divisor
@@ -320,7 +320,7 @@ void generateDrawCommands()
         {
             vDrawCommand[i].vertexCount = 12;		//4 triangles = 12 vertices
             vDrawCommand[i].instanceCount = 1;		//Draw 1 instance
-            vDrawCommand[i].firstIndex = 0;			//Draw from index 0 for this instance
+            vDrawCommand[i].firstIndex = 3;			//Draw from index 3 for this instance
             vDrawCommand[i].baseVertex = 0;	        //Starting from baseVert
             vDrawCommand[i].baseInstance = i;		//gl_InstanceID
         }
@@ -348,7 +348,7 @@ void generateDrawCommands()
 
 int main()
 {
-
+    srand(0);
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
